@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tanzania StayDirectory | Premium Explorer Platform</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+    <!-- App Navigation and Search Controls -->
+    <header class="app-header">
+        <div class="logo">
+            <i class="fas fa-map-pin" style="color: #008751;"></i>
+            Tanzania StayDirectory
+            <span class="badge">PREMIUM</span>
+        </div>
+        <div class="search-controls">
+            <div class="search-group">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="keyword-input" placeholder="Search by name, beach, safari..." />
+            </div>
+            
+            <select id="location-select">
+                <option value="Dar es Salaam, Tanzania">📍 Dar es Salaam</option>
+                <option value="Zanzibar, Tanzania">🏝️ Zanzibar (Stone Town)</option>
+                <option value="Arusha, Tanzania">🦁 Arusha (Safari Hub)</option>
+                <option value="Dodoma, Tanzania">🏛️ Dodoma (Capital)</option>
+                <option value="Mwanza, Tanzania">🌅 Mwanza</option>
+                <option value="Kilimanjaro, Tanzania">🗻 Kilimanjaro Region</option>
+                <option value="Serengeti, Tanzania">🦒 Serengeti National Park</option>
+                <option value="Ngorongoro, Tanzania">🦓 Ngorongoro Crater</option>
+                <option value="Pemba Island, Tanzania">🏖️ Pemba Island</option>
+            </select>
+            
+            <select id="type-select">
+                <option value="lodging">🏨 All Accommodation</option>
+                <option value="hotel">🏩 Hotels</option>
+                <option value="lodging">🏕️ Lodges</option>
+                <option value="campground">⛺ Campsites</option>
+                <option value="resort">🏝️ Resorts</option>
+                <option value="bed_and_breakfast">🍳 B&Bs</option>
+            </select>
+            
+            <select id="price-filter">
+                <option value="all">💰 All Prices</option>
+                <option value="budget">💵 Budget ($ - $$)</option>
+                <option value="mid">💳 Mid-Range ($$ - $$$)</option>
+                <option value="luxury">💎 Luxury ($$$+)</option>
+            </select>
+            
+            <select id="currency-select">
+                <option value="USD">💵 USD</option>
+                <option value="TZS">💶 TZS</option>
+            </select>
+            
+            <button id="search-btn" class="btn-primary">
+                <i class="fas fa-search"></i> Find Stays
+            </button>
+            <button id="toggle-favorites-btn" class="btn-favorites">
+                <i class="fas fa-heart"></i> <span id="fav-count">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- App Split Screen Workspace -->
+    <div class="app-container">
+        <!-- Scrollable Sidebar Panel -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 id="results-heading">Stays in Dar es Salaam</h2>
+                <span id="result-count" class="result-count">0 properties</span>
+            </div>
+            
+            <!-- Quick Filters -->
+            <div class="quick-filters">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="hotel">🏩 Hotels</button>
+                <button class="filter-chip" data-filter="lodging">🏕️ Lodges</button>
+                <button class="filter-chip" data-filter="resort">🏝️ Resorts</button>
+                <button class="filter-chip" data-filter="campground">⛺ Camps</button>
+            </div>
+            
+            <div id="places-list" class="places-list">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading properties...</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Live Map Interface -->
+        <main id="map-container">
+            <!-- Map Controls Overlay -->
+            <div class="map-controls">
+                <button id="my-location-btn" class="map-control-btn" title="Find my location">
+                    <i class="fas fa-location-dot"></i>
+                </button>
+                <button id="zoom-in-btn" class="map-control-btn" title="Zoom in">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="zoom-out-btn" class="map-control-btn" title="Zoom out">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button id="reset-view-btn" class="map-control-btn" title="Reset view">
+                    <i class="fas fa-home"></i>
+                </button>
+            </div>
+            
+            <!-- Map Legend -->
+            <div class="map-legend">
+                <div class="legend-item">
+                    <span class="legend-dot" style="background: #ef4444;"></span>
+                    <span>Hotels & Lodges</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background: #3b82f6;"></span>
+                    <span>Your Location</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Favorites Sliding Sidebar -->
+        <aside id="favorites-sidebar" class="favorites-sidebar">
+            <div class="fav-header">
+                <h3><i class="fas fa-heart" style="color: #ef4444;"></i> Your Saved Stays</h3>
+                <span id="close-favs" class="close-favs"><i class="fas fa-times"></i></span>
+            </div>
+            <div id="favs-list" class="favs-list">
+                <div class="empty-state">
+                    <i class="fas fa-heart" style="font-size: 48px; color: #e2e8f0;"></i>
+                    <p>No saved properties yet</p>
+                    <span>Heart your favorite stays to save them here</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Detailed Modal -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal"><i class="fas fa-times"></i></span>
+            <div id="modal-body">
+                <!-- Dynamic content injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Google Maps API -->
+    <script>
+    // Load Google Maps with API key from environment
+    const apiKey = '<%= process.env.GOOGLE_MAPS_API_KEY %>';
+    document.write('<script src="https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&v=3.0"><\/script>');
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
